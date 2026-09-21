@@ -3,21 +3,130 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #efe6d3;
+  --foreground: #2b2118;
 }
 
 body {
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(1200px 600px at 20% -10%, rgba(201, 162, 39, 0.12), transparent),
+    radial-gradient(900px 500px at 110% 10%, rgba(27, 67, 50, 0.1), transparent),
+    var(--background);
+  font-family: Georgia, serif;
+  min-height: 100vh;
+}
+
+/* ---------- paper ---------- */
+.paper-sheet {
+  background-color: #fdfbf5;
+  background-image:
+    radial-gradient(rgba(93, 64, 55, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
+  background-size: 22px 22px, 100% 100%;
+  position: relative;
+}
+
+.page-ruled {
+  background-color: #fdfbf5 !important;
+  background-image:
+    linear-gradient(90deg, transparent 44px, rgba(178, 58, 72, 0.35) 44px, rgba(178, 58, 72, 0.35) 46px, transparent 46px),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 31px, rgba(46, 90, 160, 0.28) 31px, rgba(46, 90, 160, 0.28) 32px) !important;
+  background-size: auto, auto !important;
+}
+
+.page-grid {
+  background-color: #fdfbf5 !important;
+  background-image:
+    linear-gradient(rgba(46, 90, 160, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(46, 90, 160, 0.16) 1px, transparent 1px) !important;
+  background-size: 28px 28px !important;
+}
+
+.page-dotted {
+  background-color: #fdfbf5 !important;
+  background-image: radial-gradient(rgba(43, 33, 24, 0.28) 1.3px, transparent 1.3px) !important;
+  background-size: 24px 24px !important;
+}
+
+.page-blank {
+  background-color: #fdfbf5 !important;
+  background-image: none !important;
+}
+
+/* ---------- handwriting ---------- */
+.handwriting {
+  line-height: 32px; /* matches ruled lines */
+  caret-color: #1e2a6b;
+  outline: none;
+}
+
+.handwriting p {
+  margin: 0;
+  min-height: 32px;
+}
+
+.handwriting strong,
+.handwriting b {
+  font-weight: 700;
+  /* hand-drawn bold: slight double-stroke feel, never flat Helvetica-bold */
+  text-shadow: 0.4px 0 0 currentColor, -0.3px 0 0 currentColor;
+  letter-spacing: 0.01em;
+}
+
+.handwriting u {
+  /* hand-drawn underline */
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 5px;
+  text-decoration-color: currentColor;
+  text-decoration-style: solid;
+  /* subtle wobble via border-image fallback is overkill; keep solid + offset */
+  filter: url(#wobble);
+}
+
+.handwriting mark {
+  background: rgba(255, 235, 59, 0.45);
+  border-radius: 2px;
+  padding: 0 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.handwriting mark[data-color="#ffd54f"] { background: rgba(255, 213, 79, 0.55); }
+.handwriting mark[data-color="#a5f3a5"] { background: rgba(165, 243, 165, 0.55); }
+.handwriting mark[data-color="#ffb3c1"] { background: rgba(255, 179, 193, 0.55); }
+.handwriting mark[data-color="#9fd8ff"] { background: rgba(159, 216, 255, 0.55); }
+
+.handwriting a { color: inherit; }
+
+/* Tiptap */
+.tiptap.ProseMirror {
+  outline: none;
+  min-height: 420px;
+  word-break: break-word;
+}
+.tiptap.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  opacity: 0.38;
+  pointer-events: none;
+  height: 0;
+}
+.tiptap.ProseMirror ::selection {
+  background: rgba(201, 162, 39, 0.3);
+}
+
+/* shelf wood */
+.shelf-wood {
+  background: linear-gradient(to bottom, #6d4c41 0%, #5d4037 55%, #4e342e 100%);
+  box-shadow: 0 10px 24px -10px rgba(0,0,0,.5), inset 0 2px 0 rgba(255,255,255,.18);
+}
+
+.gold-rule {
+  background: linear-gradient(90deg, transparent, rgba(201,162,39,.8), transparent);
+  height: 1px;
 }
 
 @layer utilities {
