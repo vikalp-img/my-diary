@@ -47,11 +47,21 @@ export default function PenToolbar({ editorRef }: Props) {
   };
 
   return (
-    <div className="pointer-events-auto w-full max-w-3xl rounded-2xl border border-[#e5d9bd] bg-[#fffdf6]/95 px-4 py-3 shadow-[0_16px_40px_-16px_rgba(62,39,35,.45)] backdrop-blur">
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+    <div className="pointer-events-auto w-full max-w-4xl rounded-2xl border border-[#e5d9bd] bg-[#fffdf6]/95 px-4 py-3 shadow-[0_16px_40px_-16px_rgba(62,39,35,.45)] backdrop-blur xl:w-52 xl:max-h-[80vh] xl:overflow-y-auto">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-3 xl:flex-col xl:flex-nowrap xl:items-stretch xl:gap-5">
+        {/* rail header — desktop only */}
+        <div className="hidden text-center xl:block">
+          <div
+            className="text-2xl leading-none text-[#2b2118]"
+            style={{ fontFamily: "var(--font-caveat)" }}
+          >
+            Pen Stand
+          </div>
+          <div className="gold-rule mx-auto mt-2 w-16" />
+        </div>
         {/* ink */}
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] uppercase tracking-[0.16em] text-[#8a7355]">
+        <div className="flex shrink-0 items-center gap-2 xl:flex-col xl:justify-center">
+          <span className="text-[11px] uppercase tracking-[0.16em] text-[#8a7355] xl:w-full xl:text-center">
             Ink
           </span>
           {INK_COLORS.map((c) => (
@@ -70,11 +80,11 @@ export default function PenToolbar({ editorRef }: Props) {
           ))}
         </div>
 
-        <div className="hidden h-6 w-px bg-[#e5d9bd] sm:block" />
+        <div className="hidden h-6 w-px bg-[#e5d9bd] sm:block xl:h-px xl:w-full" />
 
         {/* font */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-[11px] uppercase tracking-[0.16em] text-[#8a7355]">
+        <div className="flex shrink-0 items-center gap-1.5 xl:flex-col xl:items-stretch">
+          <span className="text-[11px] uppercase tracking-[0.16em] text-[#8a7355] xl:w-full xl:text-center">
             Pen
           </span>
           {PEN_FONTS.map((f) => (
@@ -93,11 +103,11 @@ export default function PenToolbar({ editorRef }: Props) {
           ))}
         </div>
 
-        <div className="hidden h-6 w-px bg-[#e5d9bd] sm:block" />
+        <div className="hidden h-6 w-px bg-[#e5d9bd] sm:block xl:h-px xl:w-full" />
 
         {/* nib */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-[11px] uppercase tracking-[0.16em] text-[#8a7355]">
+        <div className="flex shrink-0 items-center gap-1.5 xl:flex-col xl:justify-center">
+          <span className="text-[11px] uppercase tracking-[0.16em] text-[#8a7355] xl:w-full xl:text-center">
             Nib
           </span>
           {NIBS.map((n) => (
@@ -122,10 +132,10 @@ export default function PenToolbar({ editorRef }: Props) {
           ))}
         </div>
 
-        <div className="hidden h-6 w-px bg-[#e5d9bd] sm:block" />
+        <div className="hidden h-6 w-px bg-[#e5d9bd] sm:block xl:h-px xl:w-full" />
 
-        {/* style */}
-        <div className="flex items-center gap-1.5">
+        {/* style — docked right on mobile, stacked in the rail on desktop */}
+        <div className="ml-auto flex shrink-0 items-center gap-1.5 xl:ml-0 xl:flex-col xl:items-center">
           <button
             onClick={toggleBold}
             title="Bold (hand-drawn)"
@@ -148,7 +158,7 @@ export default function PenToolbar({ editorRef }: Props) {
           >
             U
           </button>
-          <div className="ml-1 flex items-center gap-1">
+          <div className="ml-1 flex items-center gap-1 xl:ml-0">
             {HIGHLIGHT_COLORS.map((h) => (
               <button
                 key={h.id}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { useEditor } from "@tiptap/react";
 import { PAGE_BACKGROUNDS, penFontCss } from "@/lib/pens";
@@ -22,6 +22,9 @@ export default function NotebookView() {
   const penFont = useDiaryStore((s) => s.penFont);
   const saving = useDiaryStore((s) => s.saving);
   const lastSavedAt = useDiaryStore((s) => s.lastSavedAt);
+  const penStandOpen = useDiaryStore((s) => s.penStandOpen);
+  const togglePenStand = useDiaryStore((s) => s.togglePenStand);
+  const setPenStandOpen = useDiaryStore((s) => s.setPenStandOpen);
 
   const selectNotebook = useDiaryStore((s) => s.selectNotebook);
   const createPage = useDiaryStore((s) => s.createPage);
@@ -33,6 +36,15 @@ export default function NotebookView() {
 
   const editorRef = useRef<ReturnType<typeof useEditor> | null>(null);
   const [exporting, setExporting] = useState<"page" | "book" | null>(null);
+
+  // Esc closes the pen stand
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPenStandOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [setPenStandOpen]);
 
   if (!notebook || !page) return null;
 
@@ -61,7 +73,7 @@ export default function NotebookView() {
   };
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-3 pb-40 pt-4 sm:px-6">
+    <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-3 pb-40 pt-4 sm:px-6 xl:pb-12">
       {/* top bar */}
       <div className="flex flex-wrap items-center gap-3">
         <button
@@ -210,14 +222,76 @@ export default function NotebookView() {
         </AnimatePresence>
       </div>
 
-      {/* floating pen toolbar */}
-      <motion.div
-        initial={{ y: 60, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-3"
-      >
-        <PenToolbar editorRef={editorRef} />
-      </motion.div>
+      {/* pen stand — floating button that opens/closes the toolbar */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex flex-col gap-3 px-4 xl:inset-x-auto xl:bottom-auto xl:right-8 xl:top-28 xl:flex-col-reverse xl:px-0">
+        <AnimatePresence>
+          {penStandOpen && (
+            <motion.div
+              key="pen-stand-panel"
+              initial={{ opacity: 0, y: 14, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 14, scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 380, damping: 32 }}
+              className="pointer-events-auto w-full xl:w-auto"
+            >
+              <PenToolbar editorRef={editorRef} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <div className="pointer-events-auto flex items-center justify-end gap-2">
+          {!penStandOpen && (
+            <span className="rounded-full border border-[#e5d9bd] bg-[#fffdf6]/95 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-[#8a7355] shadow">
+              Pen stand
+            </span>
+          )}
+          <button
+            onClick={togglePenStand}
+            aria-expanded={penStandOpen}
+            title={penStandOpen ? "Close pen stand (Esc)" : "Open pen stand"}
+            aria-label={penStandOpen ? "Close pen stand" : "Open pen stand"}
+            className="flex h-14 w-14 items-center justify-center rounded-full bg-[#2b2118] text-[#e9d48a] shadow-[0_12px_28px_-8px_rgba(43,33,24,.6)] ring-2 ring-[#c9a227]/70 transition hover:scale-105 hover:bg-[#3e2723]"
+          >
+            {penStandOpen ? <CloseIcon /> : <NibIcon />}
+          </button>
+        </div>
+      </div>
     </div>
+  );
+}
+
+function NibIcon() {
+  return (
+    <svg
+      width="26"
+      height="26"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M12 2.5c1.8 2.6 2.7 5 2.7 7.3L12 21l-2.7-11.2c0-2.3.9-4.7 2.7-7.3z" />
+      <circle cx="12" cy="13.2" r="1" fill="currentColor" stroke="none" />
+      <path d="M12 16.5V21" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      aria-hidden
+    >
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
   );
 }

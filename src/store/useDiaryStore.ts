@@ -25,6 +25,7 @@ interface DiaryState {
   penFont: PenFontId;
   nib: NibId;
   highlightColor: string | null;
+  penStandOpen: boolean;
 
   loaded: boolean;
   saving: boolean;
@@ -48,6 +49,8 @@ interface DiaryState {
   setPenFont: (f: PenFontId) => void;
   setNib: (n: NibId) => void;
   setHighlightColor: (c: string | null) => void;
+  togglePenStand: () => void;
+  setPenStandOpen: (v: boolean) => void;
 }
 
 export const useDiaryStore = create<DiaryState>()((set, get) => ({
@@ -62,6 +65,7 @@ export const useDiaryStore = create<DiaryState>()((set, get) => ({
   penFont: "kalam",
   nib: "medium",
   highlightColor: null,
+  penStandOpen: false,
 
   loaded: false,
   saving: false,
@@ -225,6 +229,8 @@ export const useDiaryStore = create<DiaryState>()((set, get) => ({
   setPenFont: (penFont) => set({ penFont }),
   setNib: (nib) => set({ nib }),
   setHighlightColor: (highlightColor) => set({ highlightColor }),
+  togglePenStand: () => set({ penStandOpen: !get().penStandOpen }),
+  setPenStandOpen: (penStandOpen) => set({ penStandOpen }),
 }));
 
 export function useCurrentNotebook(): Notebook | null {
